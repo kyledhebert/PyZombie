@@ -11,6 +11,10 @@ class Die():
 		return "{} Die, {}".format(self.color.title(),
 							self.value.title())
 
+	def roll_die(self):
+		"""Assigns a random value to a die"""
+		return random.choice(self.list_of_values)	
+
 
 class RedDie(Die):
 	color = "Red"

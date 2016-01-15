@@ -13,11 +13,32 @@ class Game():
 	def player_turn(self):
 		self.player = Player()
 		self.add_dice_to_hand()
-		# show player hand
-		for die in self.player.hand:
-			print(die)
-		# ask player for action
-		player_choice = input("[S]top, [R]oll Again? ").lower()
+		turn_score = 0
+		runners = 0
+		while True:
+			# show player hand
+			print("You rolled:")
+			for die in self.player.hand:
+				print("[{}] {}".format(self.player.hand.index(die) + 1, die))
+			# score brains rolled
+				if die.value == "Brain":
+					turn_score += 1
+			# deduct health for shotguns rolled
+				if die.value == "Shotgun":
+					self.player.health -= 1
+			# determine how many got away
+				if die.value == "Runner":
+					runners += 1
+			# show the player the result of the roll		
+			print("You have {} points so far".format(turn_score))
+			print("You have {} hit points remaining".format(self.player.health))
+			print("{} humans got away".format(runners))
+
+
+
+
+			# ask player for action
+			player_choice = input("[S]core Dice, [R]oll Again? ").lower()
 		# resolve player turn
 		# if player wins end game	
 
