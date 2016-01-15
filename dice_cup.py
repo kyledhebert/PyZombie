@@ -4,25 +4,31 @@ from dice import GreenDie, YellowDie, RedDie
 
 
 class DiceCup():
-	list_of_dice = []
 	number_of_green_dice = 0
 	number_of_yellow_dice = 0
 	number_of_red_dice = 0
+	dice_in_cup = []
 
 	def fill_cup(self):
 		"""Fills the cup with thirteen dice"""
-		while number_of_green_dice < 6:
-			list_of_dice.append(GreenDie())
-			number_of_green_dice ++
-		while number of number_of_yellow_dice < 4:
-			list_of_dice.append(YellowDie())
-			number_of_yellow_dice ++
-		while number_of_red_dice < 3:
-			list_of_dice.append(RedDie())
-			number_of_red_dice ++
+		while self.number_of_green_dice < 6:
+			self.dice_in_cup.append(GreenDie())
+			self.number_of_green_dice +=1
+		while self.number_of_yellow_dice < 4:
+			self.dice_in_cup.append(YellowDie())
+			self.number_of_yellow_dice += 1
+		while self.number_of_red_dice < 3:
+			self.dice_in_cup.append(RedDie())
+			self.number_of_red_dice +=1
 
-	def deal_die(self):
-		"""Deals a single to a player"""
-		return random.choice(list_of_dice) 				
+
+	def __init__(self):
+		number_of_green_dice = 0
+		number_of_yellow_dice = 0
+		number_of_red_dice = 0
+		dice_in_cup = self.fill_cup()		
+
+
+						
 
 

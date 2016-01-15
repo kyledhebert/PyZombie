@@ -5,7 +5,7 @@ class Die():
 	list_of_values = []
 
 	def __init__(self):
-		self.value = random.choice(list_of_values)
+		self.value = random.choice(self.list_of_values)
 
 	def __str__(self):
 		return "{} Die, {}".format(self.color.title(),
