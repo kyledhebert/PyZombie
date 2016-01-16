@@ -13,7 +13,7 @@ class Die():
 
 	def roll_die(self):
 		"""Assigns a random value to a die"""
-		return random.choice(self.list_of_values)	
+		self.value = random.choice(self.list_of_values)	
 
 
 class RedDie(Die):
