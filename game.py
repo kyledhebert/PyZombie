@@ -1,4 +1,5 @@
 import random
+import sys
 
 from dice_cup import DiceCup
 from player import Player
@@ -13,17 +14,22 @@ class Game():
 	def start_round(self):
 		self.player.turn_score = 0
 		self.computer.turn_score = 0
+
 			
 
 	# player turn
 	def player_turn(self):
+		"""A single turn taken by the player"""
 		runners = 0
 		self.player.add_dice_to_hand(self.dice_cup)
+			
 		while self.player.health > 0:
 			# show player hand
-			print("You rolled:")
+			print("\nYou rolled:\n")
+			print("*"*20)
 			for die in self.player.hand:
 				print(die)
+			print("*"*20 + "\n")	
 			
 			# evaluate hand
 			for die in self.player.hand:
@@ -43,20 +49,20 @@ class Game():
 
 			if self.player.health <= 0:
 				print("You have been killed")
-				print("The score is Player: {}, Computer: {}"
-					.format(self.player.score, self.computer.score))	
+				self.print_score()	
 			# ask player for action
 			elif not self.player_choice():
 				break
-			# resolve player turn
-			# if player wins end game	
+
 		
 
 
 	# computer turn
 	def computer_turn(self):
+		"""A single turn taken by the computer"""
 		runners = 0
 		self.computer.add_dice_to_hand(self.dice_cup)
+				
 		while self.computer.health > 0:
 			# show computer hand
 			print("The computer rolled:")
@@ -77,47 +83,22 @@ class Game():
 			# show the result of the computer's roll
 			print("The computer has {} points so far".format(self.computer.turn_score))
 			print("They have {} hit points remaining".format(self.computer.health))
-			print("{} humans got away".format(runners))		
+			print("{} humans got away".format(runners))
 
-			# computer moves
-			# the computer will always roll again if health >=2
-			# if health = 1 will use random to decide to roll or not
-			if self.computer.health >= 2:
-				# remove brains and shotguns from hand
-				for die in self.computer.hand:
-					if die.value == "Brain" or die.value == "Shotgun":
-						while die in self.computer.hand:
-							self.computer.hand.remove(die)
-					# reroll the dice still in hand 
-						for die in self.computer.hand:
-							die.roll_die()	
-					# continue the computer's turn
-					self.computer_turn()
-
-			elif self.computer.health == 1:
-				print("The computer has ended its turn")
-				print("The score is Player: {}, Computer: {}"
-					.format(self.player.score, self.computer.score))
-				break
-			elif self.computer.health <= 0:
-				print("The computer has been killed")
-				print("The score is Player: {}, Computer: {}"
-					.format(self.player.score, self.computer.score))	
-
-
-
-		# resolve computer turn
-		# if computer wins end game
-
-	# if no winners start next turn
+			if self.computer.health <= 0:
+				print("The computer was killed")
+				self.print_score()
+			# computer decides to score or roll
+			elif not self.computer_choice():
+				break				
 
 	def player_choice(self):
-		player_choice = input("[S]core Dice, [R]oll Again? ").lower()
+		"""Presents player choice menu and resolves choice"""
+		player_choice = input("\n[S]core Dice, [R]oll Again? ").lower()
 		if player_choice in "sr":
 			if player_choice == "s":
 				self.player.score += self.player.turn_score
-				print("The score is Player: {}, Computer: {}"
-					.format(self.player.score, self.computer.score))
+				self.print_score()
 				return False
 			elif player_choice == "r":
 				# remove brains and shotguns from hand
@@ -131,31 +112,71 @@ class Game():
 				# continue the player's turn	
 				self.player_turn()
 		else:
-			return self.player_choice()			
-
-
-	def evaluate_hand(self, runners):
-		"""Check the player's hand for Brain and Shotgun dice"""
-		for die in self.player.hand:
-			if die.value == "Brain":
-				while die in self.player.hand:
-					self.player.turn_score += 1
-					self.player.hand.remove(die)
-			elif die.value == "Shotgun":
-				while die in self.player.hand:
-					self.player.health -= 1
-					self.player.hand.remove(die)
-			elif die.value == "Runner":
-				runners += 1
+			return self.player_choice()		
+				
+			
+	def computer_choice(self):
+		"""Resolves the computer choice"""
+		# the computer will always roll again if health >=2
+		# if health = 1 computer will score dice
+		# TODO randomize computer choice when health = 1
+		if self.computer.health == 1:
+			self.computer.score += self.computer.turn_score
+			print("The computer has ended its turn")
+			self.print_score()
+			return False
+		elif self.computer.health >= 2:
+			for die in self.computer.hand:
+				if die.value == "Brain" or die.value == "Shotgun":
+					while die in self.computer.hand:
+						self.computer.hand.remove(die)
+			for die in self.computer.hand:
 				die.roll_die()
+			self.computer_turn()					
 
-				 				
+
+	def print_score(self):
+		"""Prints the game score"""
+		print("The score is Player: {}, Computer: {}"
+					.format(self.player.score, self.computer.score))
+
+				
+	def clean_up(self):
+		"""Performs maintenance tasks between turns"""
+		# empty the cup and refill it
+		# simulates putting rolled die back in the cup
+		self.dice_cup.empty_cup()
+		self.dice_cup.fill_cup()
+		# reset the player's health to full
+		self.player.health = 3
+		self.computer.health = 3
+
+
+
+	def keep_playing(self):
+		"""Determines if the game has been won"""
+		if self.player.score >= 13 or self.computer.score >= 13:
+			return False
+		else:
+			return True
+				
 
 	def __init__(self):
-		self.setup()
-		self.start_round()
-		self.player_turn()
-		self.computer_turn()
+		self.setup()	
+		while self.keep_playing():
+			self.start_round()
+			self.player_turn()
+			self.clean_up()
+			self.computer_turn()
+			self.clean_up()
+
+		if self.player.score > self.computer.score:
+			print("You win!")
+		elif self.player.score < self.computer.score:
+			print("The computer won.")
+				
+
+					
 
 
 
