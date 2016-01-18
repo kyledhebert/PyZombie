@@ -24,7 +24,7 @@ class DiceCup():
 
 	def empty_cup(self):
 		"""Empties the cup of all dice"""
-		dice_in_cup = []		
+		self.dice_in_cup.clear()		
 
 	def __init__(self):
 		number_of_green_dice = 0

@@ -11,12 +11,12 @@ class Game():
 		self.player = Player()
 		self.computer = Player()
 	
+
 	def start_round(self):
 		self.player.turn_score = 0
 		self.computer.turn_score = 0
 
 			
-
 	# player turn
 	def player_turn(self):
 		"""A single turn taken by the player"""
@@ -26,10 +26,10 @@ class Game():
 		while self.player.health > 0:
 			# show player hand
 			print("\nYou rolled:\n")
-			print("*"*20)
+			print("*" * 20)
 			for die in self.player.hand:
 				print(die)
-			print("*"*20 + "\n")	
+			print("*" * 20 + "\n")	
 			
 			# evaluate hand
 			for die in self.player.hand:
@@ -49,12 +49,11 @@ class Game():
 
 			if self.player.health <= 0:
 				print("You have been killed")
+
 				self.print_score()	
 			# ask player for action
 			elif not self.player_choice():
 				break
-
-		
 
 
 	# computer turn
@@ -62,35 +61,52 @@ class Game():
 		"""A single turn taken by the computer"""
 		runners = 0
 		self.computer.add_dice_to_hand(self.dice_cup)
-				
-		while self.computer.health > 0:
-			# show computer hand
-			print("The computer rolled:")
-			for die in self.computer.hand:
-				print(die)
+		if not self.player_quit():
 
-			# evaluate computer hand
-			for die in self.computer.hand:
-				if die.value == "Brain":
-					self.computer.turn_score += 1
-					#self.player.hand.remove(die)
-				elif die.value == "Shotgun":
-					self.computer.health -= 1
-					#self.player.hand.remove(die)
-				elif die.value == "Runner":
-					runners += 1
+			while self.computer.health > 0:
+				# show computer hand
+				print("\nThe computer rolled:\n")
+				print("*" * 20)
+				for die in self.computer.hand:
+					print(die)
+				print("*" * 20)	
+				# evaluate computer hand
+				for die in self.computer.hand:
+					if die.value == "Brain":
+						self.computer.turn_score += 1
+						#self.player.hand.remove(die)
+					elif die.value == "Shotgun":
+						self.computer.health -= 1
+						#self.player.hand.remove(die)
+					elif die.value == "Runner":
+						runners += 1
 
-			# show the result of the computer's roll
-			print("The computer has {} points so far".format(self.computer.turn_score))
-			print("They have {} hit points remaining".format(self.computer.health))
-			print("{} humans got away".format(runners))
+				# show the result of the computer's roll
+				print("The computer has {} points so far".format(self.computer.turn_score))
+				print("They have {} hit points remaining".format(self.computer.health))
+				print("{} humans got away".format(runners))
 
-			if self.computer.health <= 0:
-				print("The computer was killed")
-				self.print_score()
-			# computer decides to score or roll
-			elif not self.computer_choice():
-				break				
+				if self.computer.health <= 0:
+					print("The computer was killed")
+					self.print_score()
+				# computer decides to score or roll
+				elif not self.computer_choice():
+					break				
+
+
+	def player_quit(self):
+		"""Presents the player with a choice to continue or quit game"""
+		# this is to break up the turns, since computer turns
+		# happen so quickly, it can be hard to tell what is
+		# happening
+		player_choice = input("\n[C]ontinue or [Q]uit? ").lower()
+		if player_choice in "cq":
+			if player_choice == "q":
+				print("Thanks for playing!")
+				sys.exit()
+			elif player_choice == "c":
+					return False
+
 
 	def player_choice(self):
 		"""Presents player choice menu and resolves choice"""
@@ -137,16 +153,15 @@ class Game():
 
 	def print_score(self):
 		"""Prints the game score"""
-		print("The score is Player: {}, Computer: {}"
+		print("\nThe score is Player: {}, Computer: {}\n"
 					.format(self.player.score, self.computer.score))
 
 				
 	def clean_up(self):
 		"""Performs maintenance tasks between turns"""
-		# empty the cup and refill it
-		# simulates putting rolled die back in the cup
-		self.dice_cup.empty_cup()
-		self.dice_cup.fill_cup()
+		# create a new DiceCup to simulate
+		# putting rolled die back in the cup
+		self.dice_cup = DiceCup()
 		# reset the player's health to full
 		self.player.health = 3
 		self.computer.health = 3
