@@ -1,6 +1,8 @@
 import random
 import sys
 
+import menu
+
 from dice_cup import DiceCup
 from player import Player
 from dice import Die
@@ -177,6 +179,9 @@ class Game():
 				
 
 	def __init__(self):
+		menu.display_choices()
+		while not menu.user_choice():
+			menu.display_choices()
 		self.setup()	
 		while self.keep_playing():
 			self.start_round()
