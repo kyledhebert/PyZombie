@@ -1,3 +1,4 @@
+import json
 import random
 import sys
 
@@ -176,6 +177,23 @@ class Game():
 			return False
 		else:
 			return True
+
+
+	def update_stats(self, win, loss):
+		"""Updates the stats.txt file"""
+		stats_file = open("stats", "rt")
+		json_stats = stats_file.read()
+
+		stats = json.loads(json_stats)
+		stats["wins"] += win
+		stats["losses"] += loss
+		json_stats = json.dumps(stats)
+		stats_file = open("stats", "wt")
+		stats_file.write(json_stats)
+		stats_file.close()
+
+
+
 				
 
 	def __init__(self):
@@ -192,8 +210,16 @@ class Game():
 
 		if self.player.score > self.computer.score:
 			print("You win!")
+			win = 1
+			loss = 0
+			
 		elif self.player.score < self.computer.score:
 			print("The computer won.")
+			loss = 1
+			win = 0
+
+		self.update_stats(win, loss)	
+
 				
 
 					
