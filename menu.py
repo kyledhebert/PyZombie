@@ -27,12 +27,15 @@ def user_choice():
 
 def display_stats():
 	"""Displays the stats stored in stats.txt"""
-	stats_file = open("stats", "rt")
-	json_stats = stats_file.read()
-	stats_file.close()
-	stats = json.loads(json_stats)
-	print("\nTotal Wins: {}\nTotal Losses: {}"
-		.format(stats["wins"], stats["losses"]))
+	try:
+		stats_file = open("stats", "rt")
+		json_stats = stats_file.read()
+		stats_file.close()
+		stats = json.loads(json_stats)
+		print("\nTotal Wins: {}\nTotal Losses: {}"
+			.format(stats["wins"], stats["losses"]))
+	except ValueError:
+		print("You haven't played any games yet")	
 
 
 def display_rules():

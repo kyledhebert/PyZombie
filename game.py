@@ -181,16 +181,22 @@ class Game():
 
 	def update_stats(self, win, loss):
 		"""Updates the stats.txt file"""
-		stats_file = open("stats", "rt")
-		json_stats = stats_file.read()
-
-		stats = json.loads(json_stats)
-		stats["wins"] += win
-		stats["losses"] += loss
-		json_stats = json.dumps(stats)
-		stats_file = open("stats", "wt")
-		stats_file.write(json_stats)
-		stats_file.close()
+		try:
+			# read the stats dict if it does exist
+			stats_file = open("stats", "rt")
+			json_stats = stats_file.read()
+			stats = json.loads(json_stats)
+		except ValueError:
+			# create the stats dict if it doesn't exist	
+			stats = {"wins": 0, "losses": 0}
+		finally:
+			# update the stats dict and write it file
+			stats["wins"] += win
+			stats["losses"] += loss
+			json_stats = json.dumps(stats)
+			stats_file = open("stats", "wt")
+			stats_file.write(json_stats)
+			stats_file.close()
 
 
 
