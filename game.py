@@ -186,7 +186,7 @@ class Game():
 			stats_file = open("stats", "rt")
 			json_stats = stats_file.read()
 			stats = json.loads(json_stats)
-		except ValueError:
+		except FileNotFoundError:
 			# create the stats dict if it doesn't exist	
 			stats = {"wins": 0, "losses": 0}
 		finally:

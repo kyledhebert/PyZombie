@@ -34,7 +34,7 @@ def display_stats():
 		stats = json.loads(json_stats)
 		print("\nTotal Wins: {}\nTotal Losses: {}"
 			.format(stats["wins"], stats["losses"]))
-	except ValueError:
+	except FileNotFoundError:
 		print("You haven't played any games yet")	
 
 
