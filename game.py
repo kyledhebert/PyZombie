@@ -227,9 +227,5 @@ class Game():
 		self.update_stats(win, loss)	
 
 				
-
-					
-
-
-
-Game()
+if __name__ == '__main__':
+	Game()
