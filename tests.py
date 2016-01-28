@@ -26,6 +26,14 @@ class PlayerTest(unittest.TestCase):
 	def test_for_three_dice_in_player_hand(self):
 		self.assertTrue(len(self.player.hand) == 3)
 
+"""
+The GameTest don't run currently, since creating
+a Game() instance actually launches the game, and 
+expects user input.
+
+TODO: seperate creation of a game object and 
+playing the game
+"""
 
 # class GameTest(unittest.TestCase):
 # 	"""Tests for the game module"""
